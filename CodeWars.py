@@ -335,3 +335,21 @@ def list_squared(m, n):
       res.append([num, sum])
   return res
 
+
+
+## If the input number is already a palindrome, the number of steps is 0.
+## Input will always be a positive integer.
+##For example, start with 87:
+## 87 + 78 = 165; 165 + 561 = 726; 726 + 627 = 1353; 1353 + 3531 = 4884
+##4884 is a palindrome and we needed 4 steps to obtain it, so palindrome_chain_length(87) == 4
+
+def is_palindrome(n):
+  return str(n) == str(n)[::-1]
+def palindrome_chain_length(n):
+  step = 0
+  while not is_palindrome(n):
+    n += int(str(n)[::-1])
+    step += 1
+  return step
+
+# print(palindrome_chain_length(87))
