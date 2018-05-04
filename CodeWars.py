@@ -353,3 +353,93 @@ def palindrome_chain_length(n):
   return step
 
 # print(palindrome_chain_length(87))
+
+
+
+
+## Breadcrumb Generator
+
+ignore_words = ["the", "of", "in", "from", "by", "with", "and",
+                "or", "for", "to", "at", "a"
+                ]
+def generate_bc(url, separator):
+  if url.startswith("http"):
+    url = url.split("//")[1]
+  crumb = url.split('/')
+  crumb[-1] = crumb[-1].split('.')[0].split('?')[0].split('#')[0]
+  if crumb[-1] in ('', 'index'):
+    crumb.pop()
+
+  n = len(crumb)
+  processed_parts = []
+  for i, level in enumerate(crumb):
+    aux = level
+    if i == 0:
+      if n == 1:
+        processed_parts.append('<span class="active">HOME</span>')
+      else:
+        processed_parts.append('<a href="/">HOME</a>')
+    else:
+        if len(level) > 30:
+          aux = ''.join([entry[0] for entry in level.split('-')
+                          if entry not in ignore_words
+                          ])
+        else:
+          aux = ' '.join(aux.split('-'))
+        if i > 1 and i <= n - 2:
+          level = "/".join(crumb[1:i+1])
+        if i == n - 1:
+          processed_parts.append('<span class="active">%s</span>' % aux.upper())
+        else:
+          processed_parts.append('<a href="/%s/">%s</a>' % (level, aux.upper()))
+  return separator.join(processed_parts)
+
+
+
+## hamming number
+# Write a function that computes the nth smallest Hamming number.
+
+# Specifically:
+
+# The first smallest Hamming number is 1 = 2^0 * 3^0 * 5^0
+# The second smallest Hamming number is 2 = 2^1 * 3^0 * 5^0
+# The third smallest Hamming number is 3 = 203150
+# The fourth smallest Hamming number is 4 = 223050
+# The fifth smallest Hamming number is 5 = 203051
+def hamming(n):
+  hamm = [0 for num in range(n)]
+  hamm[0] = 1
+  a, b, c = 0, 0, 0
+  for i in range(1, n):
+    hamm[i] = min(hamm[a] * 2, hamm[b] * 3, hamm[c] * 5)
+    if hamm[i] == hamm[a] * 2: a += 1
+    if hamm[i] == hamm[b] * 3: b += 1
+    if hamm[i] == hamm[c] * 5: c += 1
+  return hamm[-1]
+
+## original version also bad code
+hamset = {1:1}
+divisors = [2, 3, 5]
+def hamming_v2(n):
+  if hamset.get(n) is not None:
+    return hamset[n]
+
+  i = list(hamset.keys())[-1] + 1
+
+  while i <= n:
+    now = hamset[i - 1]
+    find = False
+    while not find:
+      now += 1
+      rem = now
+      for div in divisors:
+        while (rem / div).is_integer():
+          rem = rem / div
+          if rem == 1:
+            hamset[i] = now
+            find = True
+            break
+        if find is True:
+          break
+    i += 1
+  return hamset[n]
