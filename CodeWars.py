@@ -443,3 +443,53 @@ def hamming_v2(n):
           break
     i += 1
   return hamset[n]
+
+
+
+# Strip Comments
+# result = solution("apples, pears # and bananas\ngrapes\nbananas !apples", ["#", "!"])
+# result should == "apples, pears\ngrapes\nbananas"
+
+def solution(string,markers):
+  parts = string.split('\n')
+
+  for m in markers:
+    parts = [p.split(m)[0].rstrip() for p in parts]
+  print(parts)
+  return '\n'.join(parts)
+
+# solution("apples, pears # and bananas\ngrapes\nbananas !apples", ["#", "!"])
+
+# Original Version
+def solution_v2(string,markers):
+  strip = 0
+  s = list(string)
+  for i in range(len(string)):
+    if s[i] in markers:
+      strip = 1
+      if s[i - 1] == ' ':
+        s[i - 1] = ''
+    if s[i] == "\n":
+      strip = 0
+    if strip == 1:
+      s[i] = ''
+  return ''.join(s)
+
+
+
+# How many numbers III?
+# Generate all the numbers of three digits that:
+# the value of adding their corresponding ones(digits) is equal to 10.
+# their digits are in increasing order (the numbers may have two or more equal contiguous digits)
+# The numbers that fulfill the two above constraints are: 118, 127, 136, 145, 226, 235, 244, 334
+
+import itertools
+def find_all(sum_dig, digs):
+  res = []
+  aux = list(itertools.combinations_with_replacement(range(1, 10), digs))
+  res = [''.join([str(num) for num in t]) for t in aux if sum(t) == sum_dig]
+  if res == []:
+    return []
+  return [len(res), int(min(res)), int(max(res))]
+
+
