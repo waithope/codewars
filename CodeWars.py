@@ -483,13 +483,30 @@ def solution_v2(string,markers):
 # their digits are in increasing order (the numbers may have two or more equal contiguous digits)
 # The numbers that fulfill the two above constraints are: 118, 127, 136, 145, 226, 235, 244, 334
 
-import itertools
+# recursion
 def find_all(sum_dig, digs):
+  res = [''.join([str(num) for num in x]) for x in gen(digs) if sum(x) == sum_dig]
+  if not res:
+    return []
+  return [len(res), int(res[0]), int(res[-1])]
+
+def gen(d, start=1):
+  if d == 1:
+    for x in range(start, 10):
+      yield [x]
+  else:
+    for x in range(start, 10):
+      for y in gen(d - 1, x):
+        yield [x] + y
+
+# built-in
+import itertools
+def find_all_v2(sum_dig, digs):
   res = []
   aux = list(itertools.combinations_with_replacement(range(1, 10), digs))
   res = [''.join([str(num) for num in t]) for t in aux if sum(t) == sum_dig]
-  if res == []:
+  if not res:
     return []
-  return [len(res), int(min(res)), int(max(res))]
+  return [len(res), int(res[0]), int(res[-1])]
 
 
